@@ -1,3 +1,49 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Dark Theme */
+body {
+    background-color: #121212;
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Bright Buttons */
+.button-bright {
+    background-color: #ff5722;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-bright:hover {
+    background-color: #ff784e;
+}
+
+/* Match Card Styling */
+.match-card {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.match-card h3 {
+    font-size: 18px;
+    margin-bottom: 5px;
+    color: #ffd700;
+}
+
+.match-card p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #bdbdbd;
+}
