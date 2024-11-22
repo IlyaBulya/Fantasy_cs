@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'pandascore' => [
+        'token' => env('PANDASCORE_API_TOKEN'),
+    ],
+
 ];
