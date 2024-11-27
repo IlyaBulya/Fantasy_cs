@@ -6,6 +6,7 @@ use App\Http\Controllers\FantasyController;
 use App\Http\Controllers\TranslationsController;
 use App\Http\Controllers\PandascoreController;
 use App\Http\Controllers\SteamAuthController;
+use App\Http\Controllers\MatchStatsController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -37,7 +38,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Просмотр статистики матча
-Route::get('/match/{id}/stats', [PandascoreController::class, 'showMatchStats'])->name('match.stats');
+Route::get('/match/{id}/stats', [MatchStatsController::class, 'show'])->name('match.stats');
 
 // Аутентификация через Steam
 Route::prefix('auth/steam')->group(function () {
@@ -49,7 +50,9 @@ Route::get('/fantasy', [FantasyController::class, 'index'])->name('fantasy');
 Route::get('/fantasy/tournament/{id}', [FantasyController::class, 'show'])->name('fantasy.tournament');
 
 Route::get('/fantasy', [FantasyController::class, 'index'])->name('fantasy.index');
-Route::get('/fantasy/tournament/{id}', [FantasyController::class, 'show'])->name('fantasy.tournament');
+Route::get('/fantasy/tournament/{id}', [FantasyController::class, 'show'])->name('fantasy.show');
+Route::post('/fantasy/assign-team', [FantasyController::class, 'assignTeamToSlot'])->name('fantasy.assign-team');
+
 
 
 // Подключение стандартной аутентификации
