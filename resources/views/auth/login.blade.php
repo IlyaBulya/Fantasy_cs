@@ -32,6 +32,7 @@
             </label>
         </div>
 
+        <!-- Login Buttons -->
         <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
                 <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
@@ -42,6 +43,24 @@
             <x-primary-button class="ms-3">
                 {{ __('Log in') }}
             </x-primary-button>
+        </div>
+
+        <!-- Steam Login Button -->
+        <div class="mt-4 flex items-center justify-center">
+            <a href="{{ route('auth.steam') }}">
+            <a href="{{ route('auth.steam') }}" style="
+            display: inline-block; 
+            background: #171a21; 
+            color: white; 
+            font-weight: bold; 
+            padding: 10px 20px; 
+            border-radius: 5px; 
+            text-decoration: none;
+            font-size: 16px;">
+            Sign in with Steam
+            </a>
+
+            </a>
         </div>
     </form>
 </x-guest-layout>

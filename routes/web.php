@@ -5,35 +5,52 @@ use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\FantasyController;
 use App\Http\Controllers\TranslationsController;
 use App\Http\Controllers\PandascoreController;
+use App\Http\Controllers\SteamAuthController;
 use Illuminate\Support\Facades\Route;
 
-// Маршрут для главной страницы (Welcome)
+
+// Главная страница
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-// Маршрут для страницы Results (Live и Non-Live)
-Route::get('/results/live', [PandascoreController::class, 'showLiveMatches'])->name('results.live');
-Route::get('/results/nonlive', [PandascoreController::class, 'showNonLiveMatches'])->name('results.nonlive');
-
-// Дефолтный маршрут для Results, который перенаправляет на Live
-Route::redirect('/results', '/results/live')->name('results');
-
-// Маршрут для страницы Fantasy
-Route::get('/fantasy', [FantasyController::class, 'index'])->name('fantasy');
-
-// Маршрут для страницы Translations
-Route::get('/translations', [TranslationsController::class, 'index'])->name('translations');
-
-// Маршрут для страницы профиля пользователя
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// Матчи (Live и Non-Live)
+Route::prefix('results')->group(function () {
+    Route::get('/live', [PandascoreController::class, 'showLiveMatches'])->name('results.live');
+    Route::get('/nonlive', [PandascoreController::class, 'showNonLiveMatches'])->name('results.nonlive');
+    Route::redirect('/', '/results/live')->name('results');
 });
 
+// Страницы функциональности
+Route::get('/fantasy', [FantasyController::class, 'index'])->name('fantasy');
+Route::get('/translations', [TranslationsController::class, 'index'])->name('translations');
+
+// Профиль пользователя
+Route::middleware('auth')->group(function () {
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::post('/update-avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update.avatar');
+        Route::delete('/delete-avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.delete.avatar');
+    });
+});
+
+// Просмотр статистики матча
 Route::get('/match/{id}/stats', [PandascoreController::class, 'showMatchStats'])->name('match.stats');
 
+// Аутентификация через Steam
+Route::prefix('auth/steam')->group(function () {
+    Route::get('/', [SteamAuthController::class, 'redirectToSteam'])->name('auth.steam');
+    Route::get('/callback', [SteamAuthController::class, 'handleSteamCallback'])->name('auth.steam.callback');
+});
 
-// Подключение аутентификации
+Route::get('/fantasy', [FantasyController::class, 'index'])->name('fantasy');
+Route::get('/fantasy/tournament/{id}', [FantasyController::class, 'show'])->name('fantasy.tournament');
+
+Route::get('/fantasy', [FantasyController::class, 'index'])->name('fantasy.index');
+Route::get('/fantasy/tournament/{id}', [FantasyController::class, 'show'])->name('fantasy.tournament');
+
+
+// Подключение стандартной аутентификации
 require __DIR__.'/auth.php';

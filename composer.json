@@ -8,7 +8,9 @@
         "php": "^8.2",
         "guzzlehttp/guzzle": "^7.9",
         "laravel/framework": "^11.9",
+        "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.9",
+        "socialiteproviders/steam": "^4.2",
         "symfony/css-selector": "^7.1",
         "symfony/dom-crawler": "^7.1"
     },

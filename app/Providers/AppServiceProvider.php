@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Laravel\Socialite\Facades\Socialite;
+use SocialiteProviders\Steam\Provider as SteamProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +21,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Регистрация драйвера Steam для Socialite
+        Socialite::extend('steam', function ($app) {
+            $config = $app['config']['services.steam'];
+
+            return Socialite::buildProvider(
+                SteamProvider::class,
+                $config
+            );
+        });
     }
 }

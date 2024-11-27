@@ -1,48 +1,67 @@
 <x-app-layout>
-    
-
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <h1 class="text-3xl font-bold mb-4 text-center">
-                        Welcome to FantasyCS
-                    </h1>
-                    <p class="text-lg text-center text-gray-600">
-                        The ultimate platform to manage your eSports fantasy teams and tournaments!
-                    </p>
+        <div class="max-w-7xl mx-auto text-center">
+            <!-- Заголовок -->
+            <h1 class="text-4xl font-bold text-white">Welcome to FantasyCS</h1>
+            <p class="text-lg text-gray-300 mt-4">
+                Build your dream eSports fantasy team and dominate tournaments!
+            </p>
+
+            <!-- Кнопки для входа или действий -->
+            @guest
+                <div class="mt-6">
+                    <a href="{{ route('register') }}" class="bg-yellow-500 text-black px-6 py-3 rounded-md font-bold hover:bg-yellow-400 mr-4">
+                        Get Started
+                    </a>
+                    <a href="{{ route('login') }}" class="bg-gray-800 text-gray-300 px-6 py-3 rounded-md font-bold hover:bg-gray-700">
+                        Log In
+                    </a>
                 </div>
-            </div>
+            @else
+                <div class="mt-6">
+                    <a href="{{ route('profile.edit') }}" class="bg-yellow-500 text-black px-6 py-3 rounded-md font-bold hover:bg-yellow-400 mr-4">
+                        Go to Your Profile
+                    </a>
+                    <a href="{{ route('results.live') }}" class="bg-gray-800 text-gray-300 px-6 py-3 rounded-md font-bold hover:bg-gray-700">
+                        Explore Live Matches
+                    </a>
+                </div>
+            @endguest
+        </div>
+
+        <!-- Why FantasyCS -->
+        <div class="mt-16 bg-gray-800 text-gray-300 py-8 px-6 rounded-lg">
+            <h2 class="text-3xl font-bold text-center mb-4">Why Choose FantasyCS?</h2>
+            <p class="text-lg text-center">
+                Join thousands of fans to create, manage, and compete with your fantasy eSports teams. Track your players' performance, join tournaments, and become the ultimate champion!
+            </p>
+        </div>
+
+        <!-- Top Players -->
+        <div class="mt-16 bg-gray-900 text-gray-100 py-8 px-6 rounded-lg">
+            <h2 class="text-3xl font-bold text-center mb-4">Top 5 Players</h2>
+            <ul class="text-lg space-y-4">
+                <li class="flex justify-between items-center border-b border-gray-700 pb-2">
+                    <span>1. <strong class="text-yellow-500">CS_Maestro</strong></span>
+                    <span>Points: <strong>1250</strong></span>
+                </li>
+                <li class="flex justify-between items-center border-b border-gray-700 pb-2">
+                    <span>2. <strong class="text-yellow-500">Headshot_King</strong></span>
+                    <span>Points: <strong>1190</strong></span>
+                </li>
+                <li class="flex justify-between items-center border-b border-gray-700 pb-2">
+                    <span>3. <strong class="text-yellow-500">Tactical_Genius</strong></span>
+                    <span>Points: <strong>1145</strong></span>
+                </li>
+                <li class="flex justify-between items-center border-b border-gray-700 pb-2">
+                    <span>4. <strong class="text-yellow-500">Eco_Warrior</strong></span>
+                    <span>Points: <strong>1120</strong></span>
+                </li>
+                <li class="flex justify-between items-center">
+                    <span>5. <strong class="text-yellow-500">Clutch_Master</strong></span>
+                    <span>Points: <strong>1095</strong></span>
+                </li>
+            </ul>
         </div>
     </div>
-
-    <!-- Секции с дополнительной информацией -->
-    <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Описание -->
-            <div class="bg-gray-100 shadow-sm sm:rounded-lg p-6">
-                <h2 class="text-xl font-bold mb-4">Why FantasyCS?</h2>
-                <p class="text-gray-700">
-                    Join thousands of fans to create, manage, and compete with your fantasy eSports teams. Track your players' performance, join tournaments, and become the ultimate champion!
-                </p>
-            </div>
-
-            <!-- Пример статей -->
-            <div class="mt-8">
-                <h2 class="text-xl font-bold mb-4">Latest Updates</h2>
-                <ul class="list-disc pl-4">
-                    <li>New tournament format announced for Fall 2024</li>
-                    <li>Top players to watch this season</li>
-                    <li>Guide: How to create a winning fantasy team</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="mt-12 bg-gray-800 text-gray-400">
-        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center">
-            <p>&copy; 2024 FantasyCS. All rights reserved.</p>
-        </div>
-    </footer>
 </x-app-layout>
