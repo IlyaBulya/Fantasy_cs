@@ -80,26 +80,22 @@ class ProfileController extends Controller
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request)
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
-
         $user = $request->user();
 
-        Auth::logout();
-
-        // Delete avatar file if it exists
-        if ($user->uploaded_avatar) {
-            Storage::disk('public')->delete($user->uploaded_avatar);
+        // Удаляем аватар, если он есть
+        if ($user->avatar) {
+            Storage::disk('public')->delete($user->avatar);
         }
 
+        // Выходим из всех сессий
+        Auth::logout();
+        
+        // Удаляем пользователя
         $user->delete();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/')->with('success', 'Account deleted successfully!');
+        // Редирект на главную
+        return redirect('/');
     }
 }

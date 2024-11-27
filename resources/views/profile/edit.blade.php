@@ -18,7 +18,7 @@
                         <div class="mb-4">
                             <label for="name" class="block text-sm font-medium text-gray-300">Name</label>
                             <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}"
-                                class="mt-1 block w-full text-sm bg-gray-700 text-gray-200 border-gray-500 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                class="mt-1 block w-full text-sm bg-gray-900 text-white border-gray-600 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
                             @error('name')
                                 <p class="text-sm text-red-400 mt-2">{{ $message }}</p>
                             @enderror
@@ -64,6 +64,24 @@
                         <button type="submit"
                             class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-150">
                             Delete Avatar
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Delete Account -->
+            <div class="p-6 bg-gray-800 text-white shadow sm:rounded-lg">
+                <div class="max-w-xl">
+                    <h3 class="text-lg font-semibold text-gray-200 mb-4">Delete Account</h3>
+                    <p class="text-gray-300 mb-4">
+                        Once your account is deleted, all of its resources and data will be permanently deleted.
+                    </p>
+                    <form method="POST" action="{{ route('profile.destroy') }}" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+                        @csrf
+                        @method('delete')
+                        <button type="submit"
+                            class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-150">
+                            Delete Account
                         </button>
                     </form>
                 </div>
