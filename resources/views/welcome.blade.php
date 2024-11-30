@@ -22,6 +22,9 @@
                     <a href="{{ route('profile.edit') }}" class="bg-yellow-500 text-black px-6 py-3 rounded-md font-bold hover:bg-yellow-400 mr-4">
                         Go to Your Profile
                     </a>
+                    <a href="{{ route('fantasy.team.show', $fantasyTournament ?? 1) }}" class="bg-gray-800 text-gray-300 px-6 py-3 rounded-md font-bold hover:bg-gray-700 mr-4">
+                        Your Teams
+                    </a>
                     <a href="{{ route('results.live') }}" class="bg-gray-800 text-gray-300 px-6 py-3 rounded-md font-bold hover:bg-gray-700">
                         Explore Live Matches
                     </a>
@@ -63,5 +66,17 @@
                 </li>
             </ul>
         </div>
+
+        <script>
+        // Добавьте JavaScript для заполнения hidden поля selected-players
+        // при выборе игроков в вашем интерфейсе
+        document.querySelector('form').addEventListener('submit', function(e) {
+            // Получаем выбранных игроков из вашего интерфейса
+            const selectedPlayers = /* ваш код для получения выбранных игроков */;
+            
+            // Преобразуем в JSON и сохраняем в hidden поле
+            document.getElementById('selected-players').value = JSON.stringify(selectedPlayers);
+        });
+        </script>
     </div>
 </x-app-layout>

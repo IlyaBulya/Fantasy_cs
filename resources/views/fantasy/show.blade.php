@@ -2,6 +2,7 @@
     @push('scripts')
     <script>
         let currentSlot = null;
+        let selectedPlayers = {};
 
         function openTeamSelector(slotNumber) {
             currentSlot = slotNumber;
@@ -20,10 +21,11 @@
                 
                 playerCard.innerHTML = `
                     <div class="flex flex-col items-center space-y-3">
-                        <div class="w-20 h-20 flex items-center justify-center">
-                            <img src="${player.image_url || '/default-player.png'}" 
+                        <div class="w-24 h-24 rounded-full bg-gray-700 flex items-center justify-center mb-4 border-4 border-indigo-500">
+                            <img src="${player.image_url || '/images/placeholder.png'}" 
                                  alt="${player.name}" 
-                                 class="w-20 h-20 rounded-full object-cover border-2 border-indigo-500">
+                                 class="w-full h-full rounded-full object-cover"
+                                 onerror="this.src='/images/placeholder.png'">
                         </div>
                         <div class="text-center">
                             <div class="text-lg font-bold text-white">${player.name}</div>
@@ -51,7 +53,47 @@
             selectedPlayer.querySelector('.player-name').textContent = player.name;
             selectedPlayer.querySelector('.team-name').textContent = team.name;
 
+            selectedPlayers[currentSlot] = {
+                player_id: player.id,
+                name: player.name,
+                team: team.name,
+                image_url: player.image_url || '/default-player.png'
+            };
+
             document.getElementById('playerSelector').classList.add('hidden');
+        }
+
+        function saveTeam() {
+            if (Object.keys(selectedPlayers).length !== 5) {
+                alert('Please select 5 players');
+                return;
+            }
+
+            fetch('{{ route("fantasy.team.store", $fantasyTournament) }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    players: selectedPlayers
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.redirect;
+                } else {
+                    alert(data.message || 'An error occurred while saving');
+                }
+            })
+            .catch(error => {
+                console.error('Detailed error:', error);
+                if (error.response) {
+                    console.error('Response data:', error.response.data);
+                }
+                alert('An error occurred while saving');
+            });
         }
     </script>
     @endpush
@@ -102,21 +144,27 @@
                         </div>
                         <div class="p-6 overflow-x-auto">
                             <div class="flex gap-4 min-w-max">
-                                @foreach($tournament['expected_roster'] as $roster)
-                                    <div class="team-card w-48 p-4 bg-gray-700 rounded-xl cursor-pointer transform transition-all duration-200 hover:scale-105 hover:bg-gray-600 flex-shrink-0"
-                                         onclick="showPlayers({{ json_encode($roster) }})">
-                                        <div class="flex flex-col items-center space-y-3">
-                                            <div class="w-20 h-20 flex items-center justify-center">
-                                                <img src="{{ $roster['team']['image_url'] }}" 
-                                                     alt="{{ $roster['team']['name'] }}" 
-                                                     class="max-w-full max-h-full object-contain">
+                                @if(isset($tournament['expected_roster']) && is_array($tournament['expected_roster']))
+                                    @foreach($tournament['expected_roster'] as $roster)
+                                        <div class="team-card w-48 p-4 bg-gray-700 rounded-xl cursor-pointer transform transition-all duration-200 hover:scale-105 hover:bg-gray-600 flex-shrink-0"
+                                             onclick="showPlayers({{ json_encode($roster) }})">
+                                            <div class="flex flex-col items-center space-y-3">
+                                                <div class="w-20 h-20 flex items-center justify-center">
+                                                    <img src="{{ $roster['team']['image_url'] }}" 
+                                                         alt="{{ $roster['team']['name'] }}" 
+                                                         class="max-w-full max-h-full object-contain">
+                                                </div>
+                                                <span class="text-lg font-bold text-white text-center">
+                                                    {{ $roster['team']['name'] }}
+                                                </span>
                                             </div>
-                                            <span class="text-lg font-bold text-white text-center">
-                                                {{ $roster['team']['name'] }}
-                                            </span>
                                         </div>
+                                    @endforeach
+                                @else
+                                    <div class="text-center text-gray-400">
+                                        <p>Data about team rosters are not available</p>
                                     </div>
-                                @endforeach
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -146,11 +194,29 @@
             </div>
 
             <!-- Save Team Button -->
-            <div class="text-center mt-8">
-                <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-xl transform transition-all duration-200 hover:scale-105">
+            <div class="text-center mt-8 space-x-4">
+                <button onclick="saveTeam()" 
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-xl transform transition-all duration-200 hover:scale-105">
                     Save Team
                 </button>
+
+                <a href="{{ route('fantasy.team.show', $fantasyTournament) }}" 
+                   class="inline-block bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-8 rounded-xl transform transition-all duration-200 hover:scale-105">
+                    Your Team
+                </a>
             </div>
+
+            @if (session('success'))
+                <div class="bg-green-500 text-white p-4 rounded-xl mb-4">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="bg-red-500 text-white p-4 rounded-xl mb-4">
+                    {{ session('error') }}
+                </div>
+            @endif
         </div>
     </div>
 </x-app-layout>

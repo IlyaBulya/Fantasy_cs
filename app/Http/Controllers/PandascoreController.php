@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Services\PandascoreApiService;
+use Illuminate\Support\Facades\Http;
+use App\Models\Tournament;
+use Illuminate\Support\Facades\Cache;
 
 class PandascoreController extends Controller
 {
@@ -42,5 +45,28 @@ class PandascoreController extends Controller
             'players' => $match['players'] ?? [],
             'maps' => $match['games'] ?? [],
         ]);
+    }
+
+    public function getTournament($id)
+    {
+        return Cache::remember("tournament.{$id}", 3600, function () use ($id) {
+            try {
+                $response = Http::withToken(config('services.pandascore.token'))
+                    ->get("https://api.pandascore.co/tournaments/{$id}")
+                    ->throw();
+
+                return $response->json();
+            } catch (\Exception $e) {
+                \Log::error('Ошибка при получении турнира из Pandascore', [
+                    'tournament_id' => $id,
+                    'error' => $e->getMessage()
+                ]);
+
+                return Tournament::find($id)?->toArray() ?? [
+                    'error' => 'Турнир не найден',
+                    'message' => 'Не удалось загрузить данные турнира'
+                ];
+            }
+        });
     }
 }

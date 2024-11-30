@@ -7,8 +7,10 @@ use App\Http\Controllers\TranslationsController;
 use App\Http\Controllers\PandascoreController;
 use App\Http\Controllers\SteamAuthController;
 use App\Http\Controllers\MatchStatsController;
+use App\Http\Controllers\FantasyTeamController;
+use App\Http\Controllers\TournamentController;
+use App\Http\Controllers\FantasyTournamentController;
 use Illuminate\Support\Facades\Route;
-
 
 // Главная страница
 Route::get('/', function () {
@@ -46,14 +48,31 @@ Route::prefix('auth/steam')->group(function () {
     Route::get('/callback', [SteamAuthController::class, 'handleSteamCallback'])->name('auth.steam.callback');
 });
 
-Route::get('/fantasy', [FantasyController::class, 'index'])->name('fantasy');
-Route::get('/fantasy/tournament/{id}', [FantasyController::class, 'show'])->name('fantasy.tournament');
-
-Route::get('/fantasy', [FantasyController::class, 'index'])->name('fantasy.index');
-Route::get('/fantasy/tournament/{id}', [FantasyController::class, 'show'])->name('fantasy.show');
-Route::post('/fantasy/assign-team', [FantasyController::class, 'assignTeamToSlot'])->name('fantasy.assign-team');
-
-
+Route::middleware(['auth'])->group(function () {
+    Route::get('/fantasy', [FantasyController::class, 'index'])->name('fantasy.index');
+    Route::get('/fantasy/tournament/{id}', [FantasyController::class, 'show'])->name('fantasy.show');
+    Route::post('/fantasy/{fantasyTournament}/team', [FantasyTeamController::class, 'store'])->name('fantasy.team.store');
+    Route::get('/tournaments', [TournamentController::class, 'index'])->name('tournaments.index');
+    Route::get('/tournaments/{id}', [TournamentController::class, 'show'])->name('tournaments.show');
+    Route::get('/fantasy-tournaments/{fantasyTournament}/commands', [FantasyTournamentController::class, 'showCommands'])
+        ->name('fantasy-tournaments.commands');
+    Route::get('/fantasy/tournament/{fantasyTournament}/team', [FantasyTeamController::class, 'show'])
+        ->name('fantasy.team.show');
+    Route::get('/fantasy/tournaments/{fantasyTournament}', [FantasyTournamentController::class, 'show'])
+        ->name('fantasy.tournaments.show');
+    Route::post('/tournaments', [TournamentController::class, 'store'])->name('tournaments.store');
+    Route::get('/tournaments/create', [TournamentController::class, 'create'])->name('tournaments.create');
+    Route::get('/fantasy/{fantasyTournament}/team/create', [FantasyTeamController::class, 'create'])
+        ->name('fantasy.team.create');
+    Route::post('/fantasy/{fantasyTournament}/team', [FantasyTeamController::class, 'store'])
+        ->name('fantasy.team.store');
+    Route::get('/fantasy/tournaments', [FantasyTournamentController::class, 'index'])
+        ->name('fantasy.tournaments.index');
+    Route::delete('/fantasy/{fantasyTournament}/team/{team}', [FantasyTeamController::class, 'destroy'])
+        ->name('fantasy.team.destroy');
+    Route::post('/fantasy-teams', [FantasyTeamController::class, 'store'])
+        ->name('fantasy-teams.store');
+});
 
 // Подключение стандартной аутентификации
 require __DIR__.'/auth.php';

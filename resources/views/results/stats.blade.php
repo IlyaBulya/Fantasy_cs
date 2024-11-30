@@ -10,10 +10,11 @@
                         <div class="flex justify-between items-center">
                             @foreach($match['opponents'] as $index => $opponent)
                                 <div class="text-center flex-1">
-                                    <img src="{{ $opponent['opponent']['image_url'] }}" 
+                                    <img src="{{ $opponent['opponent']['image_url'] ?? '/images/placeholder.png' }}" 
                                          alt="{{ $opponent['opponent']['name'] }}"
                                          style="width: 40px; height: 40px; margin: 0 auto;"
-                                         class="mb-2 object-contain">
+                                         class="mb-2 object-contain"
+                                         onerror="this.src='/images/placeholder.png'">
                                     <div class="text-xl text-white font-bold mb-1">
                                         {{ $opponent['opponent']['name'] }}
                                         @if($opponent['opponent']['acronym'])
